@@ -1,13 +1,13 @@
-# Ignore everything
-*
+# MATLAB / Octave
+*.asv
+*.m~
+*.mat
 
-# Exept the scripts
-!*.m
-!.gitignore
+# OSX
+._*
+.DS_Store*
 
-# old scripts
-!img/
-!Toolboxes/
-!Analysis/
-!Verification/
-!scrshots/
+# directories
+Data/
+VOLNOISE_PILOTE_DATA/
+scrshots/
