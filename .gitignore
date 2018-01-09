@@ -1,0 +1,13 @@
+# Ignore everything
+*
+
+# Exept the scripts
+!*.m
+!.gitignore
+
+# old scripts
+!img/
+!Toolboxes/
+!Analysis/
+!Verification/
+!scrshots/
