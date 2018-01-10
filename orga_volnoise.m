@@ -1,4 +1,6 @@
 function expe = orga_volnoise(ex)
+% modification essai pour github
+
 
 %ntrl = length(ex.blck)*ex.blck(1).ntrl;
 expe = [];
