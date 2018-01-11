@@ -323,8 +323,8 @@ try
     
     for iblck = start_blck:nblck
         blck = expe.blck(iblck);
-        %ntrl = blck.ntrl;
-        ntrl = 6;
+        ntrl = blck.ntrl;
+        %ntrl = 6;
         
         % create results structure
         rslt          = [];
