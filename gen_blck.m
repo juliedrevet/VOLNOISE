@@ -9,6 +9,7 @@ function [blck] = gen_blck(volperm)
 %   NEW FIELDS:
 %   * ntrl       - number of trial for this block
 %   * switch_seq - reward prob switch => 1: switch or 0: no switch
+%   * switch_spe - same as switch_seq but with 2: intervolatility switch
 %   * false_seq  - false positives sequence => 1: false positive or 0: no
 %   * reward_seq - probability of reward at each trial => array(1,ntrl)
 %   * outcome    - actual rewarding sequence => 1: shape(1) or 2: shape(2)
@@ -69,6 +70,7 @@ for ivol = 1:length(volperm)
     switch_seq = zeros(1,ntrl);
     switch_seq(switch_idx(1:end-1)) = 1;
     blck.switch_seq(ivol,:) = switch_seq;
+    blck.switch_spe(ivol,:) = switch_seq;
     
     if ivol < length(volperm)
         last_epi(ivol) = b.xs(end);
@@ -93,6 +95,7 @@ if length(volperm) > 1
         end
         if interrnd < 0
             blck.switch_seq(i,end+interrev) = 1;
+            blck.switch_spe(i,end+interrev) = 2;
             blck.correct(i,(end+interrev):end)   = 3-blck.correct(i,(end+interrev):end);
             if blck.correct(i+1,1) ~= blck.correct(i,end)
                 % reverse all following sequences
@@ -108,6 +111,7 @@ if length(volperm) > 1
                 end
             end
             blck.switch_seq(i+1,1+interrev) = 1;
+            blck.switch_spe(i+1,1+interrev) = 2;
             blck.correct(i+1,1:interrev)    = 3-blck.correct(i+1,1:interrev);
         end
     end
@@ -130,6 +134,7 @@ for i = 1:length(volperm)
 end
 
 blck.switch_seq = reshape(blck.switch_seq',1,length(volperm)*ntrl);
+blck.switch_spe = reshape(blck.switch_spe',1,length(volperm)*ntrl);
 blck.false_seq  = reshape(blck.false_seq',1,length(volperm)*ntrl);
 blck.correct    = reshape(blck.correct',1,length(volperm)*ntrl);
 blck.reward_seq = (blck.correct==1)*p_reward+(blck.correct==2)*(1-p_reward);
