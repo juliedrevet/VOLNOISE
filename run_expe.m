@@ -82,7 +82,7 @@ errmsg  = [];    % error message
 % set screen parameters
 if fmri
     % CENIR fMRI configuration
-    iscr     = 0;%1;
+    iscr     = 1;%1;
     res      = [];%[1024 768];
     fps      = [];%60;%
     ppd      = 33;%40;%53(prisma);
