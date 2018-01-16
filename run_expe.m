@@ -611,7 +611,7 @@ try
         Screen('DrawText',video.h,labeltxt,labelrec(1),labelrec(2),color_txt);
         Screen('DrawingFinished',video.h);
         Screen('Flip',video.h);
-        WaitKeyPress(keywait);
+%         WaitKeyPress(keywait);
         
     end % block loop
     
