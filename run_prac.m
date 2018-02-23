@@ -266,7 +266,7 @@ try
     for iblck = start_blck:nblck
         blck = expe.blck(iblck);
         ntrl = blck.ntrl;
-        ntrl = 6;
+        %ntrl = 6;
         
         % create results
         rslt          = [];
