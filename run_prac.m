@@ -266,7 +266,7 @@ try
     for iblck = start_blck:nblck
         blck = expe.blck(iblck);
         ntrl = blck.ntrl;
-        %ntrl = 6;
+        ntrl = 6;
         
         % create results
         rslt          = [];
@@ -360,8 +360,8 @@ try
             % check if abort key is pressed
             if CheckKeyPress(keyquit)
                 aborted = true;
-                ShowCursor;
-                sca;
+%                 ShowCursor;
+%                 sca;
                 break
             end
             
@@ -446,11 +446,6 @@ try
             
         end % end of trial loop
         
-        Screen('DrawTexture',video.h,fixtn_tex,[],fixtn_rec,[],[],[],color_txt);
-        Screen('DrawingFinished',video.h);
-        t = Screen('Flip',video.h,t+roundfp(1));
-        clck.tend = t-T0;
-        
         % compute performances (euros actually seen)
         rslt.perf = sum(rslt.resp(1:ntrl) == blck.outcome(1:ntrl))/ntrl;
         
@@ -463,6 +458,7 @@ try
         
         rslt.perfRL   = perfRL;
         rslt.perfWSLS = perfWSLS;
+        
         
         % update experiment structure
         expe.blck(iblck) = blck;
@@ -480,8 +476,20 @@ try
         fpath = foldname;
         fname = sprintf('VOLNOISE_IRM_S%02d_training_b%02d_%s',hdr.subj,iblck,datestr(now,'yyyymmdd-HHMM'));
         fname = fullfile(fpath,fname);
+        if aborted
+            fname = [fname,'_aborted'];
+        end
         save([fname,'.mat'],'expe_blck');
-
+        
+        if aborted
+            break
+        end
+        
+        
+        Screen('DrawTexture',video.h,fixtn_tex,[],fixtn_rec,[],[],[],color_txt);
+        Screen('DrawingFinished',video.h);
+        t = Screen('Flip',video.h,t+roundfp(1));
+        clck.tend = t-T0;
         % draw perf screen
         h = histc(rslt.perf,[0 linspace(min(mean(perfRL),.85),max(mean(perfRL),.85),5) 1]);
         gain     = find(h)-1;
@@ -500,9 +508,17 @@ try
             imwrite(imgscreen,sprintf('./scrshots/Data_S%02d/perf_%s.png',subj,datestr(now,'yymmdd-HHMMSS')));
         end
         WaitKeyPress(keywait);
-
         
     end % block loop
+
+    if aborted
+        Screen('CloseAll');
+        FlushEvents;
+        ListenChar(0);
+        ShowCursor;
+        sca;
+        return
+    end   
     
     % save complete file
     fpath = foldname;
@@ -527,10 +543,6 @@ try
     
     fprintf('... %d euro(s) de bonus!\n\n',cum_gain)
     
-    if aborted
-        Screen('CloseAll');
-        return
-    end
    
     % close Psychtoolbox
     Priority(0);
@@ -539,7 +551,7 @@ try
     ListenChar(0);
     ShowCursor;
     
-catch
+catch ME
     
     % close Psychtoolbox
     Priority(0);
@@ -550,10 +562,9 @@ catch
     
     % handle error
     if nargout > 2
-        errmsg = lasterror;
-        errmsg = rmfield(errmsg,'stack');
+        errmsg = ME;
     else
-        rethrow(lasterror);
+        rethrow(ME);
     end
     
 end

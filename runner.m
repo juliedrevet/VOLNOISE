@@ -62,7 +62,7 @@ end
 % add header to experiment structure
 expe.hdr = hdr;
 expe = orderfields(expe,{'hdr','blck','rslt','clck','stim','logi'});
-
+    
 if ~isempty(errmsg)
     rethrow(errmsg);
 end

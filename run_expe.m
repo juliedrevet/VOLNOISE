@@ -457,8 +457,8 @@ try
             % check if abort key is pressed
             if CheckKeyPress(keyquit)
                 aborted = true;
-                ShowCursor;
-                sca;
+%                 ShowCursor;
+%                 sca;
                 break
             end
             
@@ -588,7 +588,14 @@ try
         fpath = foldname;
         fname = sprintf('VOLNOISE_IRM_S%02d_session%d_b%02d_%s',hdr.subj,session,iblck,datestr(now,'yyyymmdd-HHMM'));
         fname = fullfile(fpath,fname);
+        if aborted
+            fname = [fname,'_aborted'];
+        end
         save([fname,'.mat'],'expe_blck');
+        
+        if aborted
+            break
+        end
         
         % draw perf screen
         h = histc(rslt.perf,[0 linspace(min(mean(perfRL),.85),max(mean(perfRL),.85),5) 1]);
@@ -615,6 +622,16 @@ try
         
     end % block loop
     
+    if aborted
+        Priority(0);
+        Screen('CloseAll');
+        %     FlushEvents;
+        %     ListenChar(0);
+        ShowCursor;
+        sca;
+        return
+    end
+    
     % save complete file
     fpath = foldname;
     fname = sprintf('VOLNOISE_IRM_S%02d_session%d_%s',hdr.subj,session,datestr(now,'yyyymmdd-HHMMSS'));
@@ -636,11 +653,11 @@ try
     fprintf('\tRL:\t %d%%\n', round(perfRL_tot*100))
     fprintf('\tWSLS:\t %d%%\n', round(perfWSLS_tot*100))
     fprintf('... %d euro(s) de bonus!\n\n',cum_gain)
-    
-    if aborted
-        Screen('CloseAll');
-        return
-    end
+%     
+%     if aborted
+%         Screen('CloseAll');
+%         return
+%     end
 % ====================================================================
 % Vasilisa (uncomment for fMRI) 
 % KL.Stop;
@@ -653,7 +670,7 @@ try
 %     ListenChar(0);
     ShowCursor;
     
-catch
+catch ME
     
     KL.GetQueue;
     KL.Stop;
@@ -669,10 +686,10 @@ catch
     
     % handle error
     if nargout > 2
-        errmsg = lasterror;
-        errmsg = rmfield(errmsg,'stack');
+        errmsg = ME;
+        %errmsg = rmfield(errmsg,'stack');
     else
-        rethrow(lasterror);
+        rethrow(ME);
     end
     
 end
