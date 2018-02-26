@@ -38,6 +38,10 @@ expe_prac     = orderfields(expe_prac,{'hdr','blck'});
 foldname = sprintf('./Data/S%02d',hdr.subj);
 filename = sprintf('VOLNOISE_IRM_S%02d_training_%s',hdr.subj,hdr.date);
 if aborted
+    if ~exist([foldname,'/aborted'],'dir')
+        mkdir([foldname,'/aborted']);
+    end
+    foldname = [foldname,'/aborted/'];
     filename = [filename,'_aborted'];
 end
 filename = [filename,'.mat'];

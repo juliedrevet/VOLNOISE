@@ -82,14 +82,14 @@ errmsg  = [];    % error message
 % set screen parameters
 if fmri
     % CENIR fMRI configuration
-    iscr     = 1;%1;
+    iscr     = 0;%1;
     res      = [];%[1024 768];
     fps      = [];%60;%
     ppd      = 33;%40;%53(prisma);
     syncflip = true; %?
 else
     % default configuration for flat panel displays
-    iscr = 1;  % screen index
+    iscr = 0;  % screen index
     res  = []; % screen resolution
     fps  = []; % screen refresh rate
     ppd  = 40; % number of screen pixels per degree of visual angle
@@ -587,10 +587,14 @@ try
         % save temporary file (block per block)
         fpath = foldname;
         fname = sprintf('VOLNOISE_IRM_S%02d_session%d_b%02d_%s',hdr.subj,session,iblck,datestr(now,'yyyymmdd-HHMM'));
-        fname = fullfile(fpath,fname);
         if aborted
+            if ~exist([fpath,'/aborted'],'dir')
+                mkdir([fpath,'/aborted']);
+            end
+            fpath = [foldname,'/aborted/'];
             fname = [fname,'_aborted'];
         end
+        fname = fullfile(fpath,fname);
         save([fname,'.mat'],'expe_blck');
         
         if aborted

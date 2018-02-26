@@ -475,10 +475,14 @@ try
         % save temporary file (block per block)
         fpath = foldname;
         fname = sprintf('VOLNOISE_IRM_S%02d_training_b%02d_%s',hdr.subj,iblck,datestr(now,'yyyymmdd-HHMM'));
-        fname = fullfile(fpath,fname);
         if aborted
+            if ~exist([foldname,'/aborted'],'dir')
+                mkdir([foldname,'/aborted']);
+            end
+            fpath = [foldname,'/aborted/'];
             fname = [fname,'_aborted'];
         end
+        fname = fullfile(fpath,fname);
         save([fname,'.mat'],'expe_blck');
         
         if aborted

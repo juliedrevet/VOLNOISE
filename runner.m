@@ -71,6 +71,10 @@ end
 datapath = sprintf('./Data/S%02d',hdr.subj);
 filename = sprintf('VOLNOISE_IRM_S%02d_session%d_%s',hdr.subj,hdr.session,hdr.date);
 if aborted
+    if ~exist([datapath,'/aborted'],'dir')
+        mkdir([datapath,'/aborted']);
+    end
+    datapath = [datapath,'/aborted/'];
     filename = [filename,'_aborted'];
 end
 filename = [filename,'.mat'];
